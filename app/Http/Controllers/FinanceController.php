@@ -6,7 +6,6 @@ use App\Models\Campus;
 use App\Models\Payment;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use App\Models\Finance;
 
 class FinanceController extends Controller
 {
@@ -50,16 +49,18 @@ class FinanceController extends Controller
         ]);
 
         $validated['initiated_by'] = auth()->id();
-        Finance::create($validated);
+        $validated['campus_id'] = auth()->user()?->campus_id;
+        Payment::create($validated);
 
         if ($request->filled('installment_split')) {
             foreach ($request->installment_split as $split) {
-                Finance::create([
+                Payment::create([
                     'payer_id'    => $validated['payer_id'],
                     'amount'      => $validated['amount'] / count($request->installment_split),
                     'type'        => $validated['type'],
                     'status'      => 'pending',
                     'initiated_by'=> auth()->id(),
+                    'campus_id'   => $validated['campus_id'],
                 ]);
             }
         }
@@ -67,8 +68,42 @@ class FinanceController extends Controller
         return redirect()->route('finance.index')->with('success','Payment recorded.');
     }
 
-    public function receipt($fin)
+    public function receipt(Payment $payment)
     {
-        return $this->withOrg('finance-receipt', ['payment'=>Finance::findOrFail($fin)]);
+        return $this->withOrg('finance.receipt', compact('payment'));
+    }
+
+    public function approvePayment(Payment $payment)
+    {
+        $payment->update(['status' => 'completed']);
+        return back()->with('success','Payment approved.');
+    }
+
+    public function reports()
+    {
+        return $this->withOrg('finance.reports', []);
+    }
+
+    public function splitInstallment(Request $request)
+    {
+        $validated = $request->validate([
+            'payer_id' => 'required|exists:students,id',
+            'amount'   => 'required|numeric|min:0',
+            'count'    => 'required|integer|min:2',
+        ]);
+
+        $amount = $validated['amount'] / $validated['count'];
+        for ($i = 0; $i < $validated['count']; $i++) {
+            Payment::create([
+                'payer_id'    => $validated['payer_id'],
+                'amount'      => $amount,
+                'type'        => 'installment',
+                'status'      => 'pending',
+                'initiated_by'=> auth()->id(),
+                'campus_id'   => auth()->user()?->campus_id,
+            ]);
+        }
+
+        return back()->with('success','Installment split created.');
     }
 }

@@ -26,7 +26,11 @@ Route::post('/admin/force-login/{user}', [AuthController::class, 'forceLogin'])
 */
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/dashboard/overview', [DashboardController::class, 'overview'])->name('dashboard.overview');
+    
+    // Profile
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
 
     // ── User Management ──────────────────────────────────────
     Route::prefix('users')->name('users.')->middleware(['role:super_admin,hq_admin,campus_admin'])->group(function () {
@@ -118,12 +122,54 @@ Route::middleware(['auth'])->group(function () {
 
     // ── Messaging ───────────────────────────────────────────
     Route::prefix('messages')->name('messages.')->middleware(['role:super_admin,hq_admin,campus_admin,campus_manager,handler,counsellor,student'])->group(function () {
-        Route::get('/',                                         [\App\Http\Controllers\MessageController::class,'inbox'])->name('inbox');
-        Route::get('/sent',                                     [\App\Http\Controllers\MessageController::class,'sent'])->name('sent');
-        Route::get('/ compose',                                 [\App\Http\Controllers\MessageController::class,'compose'])->name('compose');
-        Route::post('/',                                        [\App\Http\Controllers\MessageController::class,'send'])->name('send');
-        Route::get('/{message}',                                [\App\Http\Controllers\MessageController::class,'show'])->name('show');
-        Route::post('/{message}/reply',                         [\App\Http\Controllers\MessageController::class,'reply'])->name('reply');
+        Route::get('/',                                [\App\Http\Controllers\MessageController::class,'inbox'])->name('inbox');
+        Route::get('/sent',                            [\App\Http\Controllers\MessageController::class,'sent'])->name('sent');
+        Route::get('/compose',                         [\App\Http\Controllers\MessageController::class,'compose'])->name('compose');
+        Route::post('/',                               [\App\Http\Controllers\MessageController::class,'send'])->name('send');
+        Route::get('/{message}',                       [\App\Http\Controllers\MessageController::class,'show'])->name('show');
+        Route::post('/{message}/reply',                [\App\Http\Controllers\MessageController::class,'reply'])->name('reply');
+    });
+
+    // ── Courses / Modules ───────────────────────────────────
+    Route::prefix('modules')->name('modules.')->middleware(['role:super_admin,hq_admin,campus_admin,campus_manager,handler,counsellor,student'])->group(function () {
+        Route::get('/',                                [\App\Http\Controllers\ModuleController::class,'index'])->name('index');
+        Route::get('/create',                          [\App\Http\Controllers\ModuleController::class,'create'])->name('create');
+        Route::post('/',                               [\App\Http\Controllers\ModuleController::class,'store'])->name('store');
+        Route::get('/{module}',                        [\App\Http\Controllers\ModuleController::class,'show'])->name('show');
+        Route::get('/{module}/edit',                   [\App\Http\Controllers\ModuleController::class,'edit'])->name('edit');
+        Route::put('/{module}',                        [\App\Http\Controllers\ModuleController::class,'update'])->name('update');
+        Route::delete('/{module}',                     [\App\Http\Controllers\ModuleController::class,'destroy'])->name('destroy');
+    });
+
+    // ── Classes ─────────────────────────────────────────────
+    Route::prefix('classes')->name('classes.')->middleware(['role:super_admin,hq_admin,campus_admin,campus_manager,handler,counsellor,student'])->group(function () {
+        Route::get('/',                                [\App\Http\Controllers\ClassRoomController::class,'index'])->name('index');
+        Route::get('/create',                          [\App\Http\Controllers\ClassRoomController::class,'create'])->name('create');
+        Route::post('/',                               [\App\Http\Controllers\ClassRoomController::class,'store'])->name('store');
+        Route::get('/{class}',                         [\App\Http\Controllers\ClassRoomController::class,'show'])->name('show');
+        Route::get('/{class}/edit',                    [\App\Http\Controllers\ClassRoomController::class,'edit'])->name('edit');
+        Route::put('/{class}',                         [\App\Http\Controllers\ClassRoomController::class,'update'])->name('update');
+        Route::delete('/{class}',                      [\App\Http\Controllers\ClassRoomController::class,'destroy'])->name('destroy');
+    });
+
+    // ── Enrollments ────────────────────────────────────────
+    Route::prefix('enrollments')->name('enrollments.')->middleware(['role:super_admin,hq_admin,campus_admin,campus_manager,handler,counsellor,student'])->group(function () {
+        Route::get('/',                                [\App\Http\Controllers\EnrollmentController::class,'index'])->name('index');
+        Route::get('/create',                          [\App\Http\Controllers\EnrollmentController::class,'create'])->name('create');
+        Route::post('/',                               [\App\Http\Controllers\EnrollmentController::class,'store'])->name('store');
+        Route::get('/{enrollment}',                    [\App\Http\Controllers\EnrollmentController::class,'show'])->name('show');
+        Route::get('/{enrollment}/edit',               [\App\Http\Controllers\EnrollmentController::class,'edit'])->name('edit');
+        Route::put('/{enrollment}',                    [\App\Http\Controllers\EnrollmentController::class,'update'])->name('update');
+        Route::post('/{enrollment}/approve',           [\App\Http\Controllers\EnrollmentController::class,'approve'])->name('approve');
+        Route::post('/{enrollment}/reject',            [\App\Http\Controllers\EnrollmentController::class,'reject'])->name('reject');
+    });
+
+    // ── Video / Class Records ───────────────────────────────
+    Route::prefix('videos')->name('videos.')->middleware(['role:super_admin,hq_admin,campus_admin,campus_manager,handler,counsellor,student'])->group(function () {
+        Route::get('/',                                [\App\Http\Controllers\VideoController::class,'index'])->name('index');
+        Route::get('/class/{class}',                   [\App\Http\Controllers\VideoController::class,'byClass'])->name('by-class');
+        Route::get('/record/{record}',                 [\App\Http\Controllers\VideoController::class,'play'])->name('play');
+        Route::post('/record/{record}/progress',       [\App\Http\Controllers\VideoController::class,'updateProgress'])->name('update-progress');
     });
 
     // ── Reports ─────────────────────────────────────────────
@@ -148,5 +194,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/activity-logs',                   [\App\Http\Controllers\SettingsController::class,'activityLogs'])->name('activity-logs');
         Route::get('/ilap-config',                     [\App\Http\Controllers\SettingsController::class,'ilapConfig'])->name('ilap-config');
         Route::put('/ilap-config',                     [\App\Http\Controllers\SettingsController::class,'saveIlapConfig'])->name('save-ilap-config');
+        Route::post('/colors',                         [\App\Http\Controllers\SettingsController::class,'updateColors'])->name('update-colors');
     });
 });

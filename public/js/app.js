@@ -13,10 +13,9 @@
     const toggleBtn = document.getElementById('ilap-sidebar-toggle');
     const overlay   = document.getElementById('ilap-overlay');
 
-    if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener('click', function () {
-            sidebar.classList.toggle('ilap-sidebar--closed');
-        });
+    if (sidebar) {
+        sidebar.classList.toggle('-translate-x-full');
+        sidebar.classList.toggle('translate-x-0');
     }
 
     if (overlay) {

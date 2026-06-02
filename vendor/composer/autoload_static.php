@@ -566,7 +566,8 @@ class ComposerStaticInit8a3af2b4ca5c95d94031593ac6c1b9f1
         ),
         'Database\\Seeders\\' => 
         array (
-            0 => __DIR__ . '/..' . '/laravel/pint/database/seeders',
+            0 => __DIR__ . '/../..' . '/database/seeders',
+            1 => __DIR__ . '/..' . '/laravel/pint/database/seeders',
         ),
         'Database\\Factories\\' => 
         array (
@@ -611,6 +612,11 @@ class ComposerStaticInit8a3af2b4ca5c95d94031593ac6c1b9f1
         'App\\DTOs\\LeadCreateRequest' => __DIR__ . '/../..' . '/app/DTOs/LeadCreateRequest.php',
         'App\\DTOs\\PaymentCreateRequest' => __DIR__ . '/../..' . '/app/DTOs/PaymentCreateRequest.php',
         'App\\DTOs\\StudentCreateRequest' => __DIR__ . '/../..' . '/app/DTOs/StudentCreateRequest.php',
+        'App\\Data\\Sidebar\\SidebarConfig' => __DIR__ . '/../..' . '/app/Data/Sidebar/SidebarConfig.php',
+        'App\\Data\\Sidebar\\SidebarItem' => __DIR__ . '/../..' . '/app/Data/Sidebar/SidebarItem.php',
+        'App\\Data\\Sidebar\\SidebarService' => __DIR__ . '/../..' . '/app/Data/Sidebar/SidebarService.php',
+        'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
+        'App\\Http\\Controllers\\Auth\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthController.php',
         'App\\Http\\Controllers\\CampusController' => __DIR__ . '/../..' . '/app/Http/Controllers/CampusController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
@@ -811,6 +817,10 @@ class ComposerStaticInit8a3af2b4ca5c95d94031593ac6c1b9f1
         'Cron\\HoursField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
+        'Database\\Seeders\\AllSeeder' => __DIR__ . '/../..' . '/database/seeders/AllSeeder.php',
+        'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\PermissionsSeeder' => __DIR__ . '/../..' . '/database/seeders/PermissionsSeeder.php',
+        'Database\\Seeders\\UserSeeder' => __DIR__ . '/../..' . '/database/seeders/UserSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',

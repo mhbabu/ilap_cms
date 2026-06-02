@@ -9,8 +9,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-
-            $table->ulid('id')->primary();
+            $table->id();
 
             $table->string('name');
             $table->string('email')->unique();
@@ -19,9 +18,9 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('role', 50)->default('student');
 
-            $table->unsignedBigInteger('campus_id')
+            $table->foreignId('campus_id')
                 ->nullable()
-                ->index();
+                ->constrained('campuses');
 
             $table->unsignedBigInteger('parent_id')
                 ->nullable()
@@ -33,6 +32,7 @@ return new class extends Migration {
             $table->date('date_of_birth')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->boolean('forced_login')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -110,5 +110,11 @@ class LeadController extends Controller
         return back()->with('success','Handler assigned.');
     }
 
+    public function destroy(Lead $lead): RedirectResponse
+    {
+        $lead->delete();
+        return redirect()->route('leads.index')->with('success','Lead deleted.');
+    }
+
     public function search(Request $request) { return response()->json([]); }
 }

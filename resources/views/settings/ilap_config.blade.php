@@ -1,7 +1,7 @@
 {{-- extends settings-layout --}}
 @extends('settings.settings-layout')
 
-@section('content')
+@section('settings-content')
 <div class="ilap-card ilap-mb-6">
     <div class="ilap-card-header">
         <h3 class="ilap-m-0">iLAP System Configuration</h3>

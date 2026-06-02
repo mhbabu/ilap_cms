@@ -14,11 +14,10 @@
 
         @csrf
 
-        {{ hidden }}
         <div class="ilap-form-group md:col-span-2">
             <label class="ilap-label">Student / Payer</label>
             <select name="payer_id" class="ilap-select w-full" required>
-                @foreach($payers as $p)
+                @foreach($students as $p)
                     <option value="{{ $p->id }}">{{ $p->name }} ({{ $p->unique_id ?? '—' }})</option>
                 @endforeach
             </select>

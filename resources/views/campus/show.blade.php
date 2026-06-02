@@ -1,73 +1,54 @@
-{{-- resources/views/campus/show.blade.php --}}
 @extends('layouts.app')
 
-@section('title',$campus->name)
-@section('page-title', $campus->name .' — Branch')
+@section('title', $campus->name)
+@section('page-title', $campus->name .' — Campus Detail')
+
 @section('content')
-
-@php $cColor = $campus->color_primary ?? 'var(--ilap-primary)'; @endphp
-
-<div class="ilap-grid-3 ilap-mb-6">
-    <div class="ilap-card">
-        <div class="ilap-p-5">
-            <p class="ilap-text-2xs ilap-uppercase text-slate-400 ilap-mb-2">Students</p>
-            <p class="ilap-text-3xl ilap-font-extrabold" style="color:var(--ilap-primary)">{{ number_format($campus->students->count()) }}</p>
-        </div>
+<div class="ilap-page-header ilap-flex items-center justify-between gap-3">
+    <div>
+        <h1 class="ilap-text-2xl ilap-font-extrabold" style="color:var(--ilap-primary-dark)">{{ $campus->name }}</h1>
+        <p class="ilap-text-sm text-slate-500">Campus ID: {{ $campus->id }}</p>
     </div>
-
-    <div class="ilap-card">
-        <div class="ilap-p-5">
-            <p class="ilap-text-2xs ilap-uppercase text-slate-400 ilap-mb-2">Classes</p>
-            <p class="ilap-text-3xl ilap-font-extrabold" style="color:var(--ilap-secondary)">
-                {{ number_format($campus->classes->count()) }}
-            </p>
-        </div>
-    </div>
-
-    <div class="ilap-card">
-        <div class="ilap-p-5">
-            <p class="ilap-text-2xs ilap-uppercase text-slate-400 ilap-mb-2">Enrollments</p>
-            <p class="ilap-text-3xl ilap-font-extrabold" style="color:var(--ilap-primary)">
-                {{ number_format($campus->enrollments->count()) }}
-            </p>
-        </div>
+    <div class="ilap-flex gap-2">
+        <a href="{{ route('campuses.edit', $campus) }}" class="ilap-btn ilap-btn-secondary ilap-btn-sm">Edit</a>
+        <a href="{{ route('campuses.index') }}" class="ilap-btn ilap-btn-secondary ilap-btn-sm">Back</a>
     </div>
 </div>
 
-{{-- Enrollments table --}}
-<div class="ilap-card">
-    <div class="ilap-card-header ilap-flex items-center justify-between">
-        <h3 class="ilap-m-0 ilap-font-bold text-slate-800">Enrollments — {{ $campus->name }}</h3>
+<div class="ilap-grid-3 gap-6">
+    <div class="ilap-card">
+        <div class="ilap-card-header">
+            <h3 class="ilap-font-bold text-slate-800 ilap-m-0">Campus Info</h3>
+        </div>
+        <div class="ilap-p-4 space-y-2">
+            <p><span class="ilap-text-xs text-slate-500">Address:</span> {{ $campus->address ?? '—' }}</p>
+            <p><span class="ilap-text-xs text-slate-500">Phone:</span> {{ $campus->phone ?? '—' }}</p>
+            <p><span class="ilap-text-xs text-slate-500">Students:</span> {{ $campus->students_count ?? $campus->students()->count() }}</p>
+        </div>
     </div>
-    <div class="ilap-table__wrap">
-        <table class="ilap-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Student</th>
-                    <th>Class</th>
-                    <th>Module</th>
-                    <th>Enrolled</th>
-                    <th>Completed</th>
-                </tr>
-            </thead>
-            <tbody>
-            @forelse($enrollments as $i => $e)
-            <tr>
-                <td>{{ $i + 1 }}</td>
-                <td class="ilap-font-semibold">{{ $e->student?->name ?? '—' }}</td>
-                <td>{{ $e->classId?->name ?? '—' }}</td>
-                <td>{{ $e->module?->name ?? '—' }}</td>
-                <td>{{ $e->enrollment_date?->format('Y-m-d') ?? '—' }}</td>
-                <td><span class="ilap-badge ilap-badge--{{ $e->status === 'enrolled' ? 'green' : 'gray' }}">{{ $e->status }}</span></td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" class="ilap-text-center ilap-py-12 text-slate-400">No enrollments yet.</td>
-            </tr>
-            @endforelse
-            </tbody>
-        </table>
+
+    <div class="ilap-card">
+        <div class="ilap-card-header">
+            <h3 class="ilap-font-bold text-slate-800 ilap-m-0">Enrollments</h3>
+        </div>
+        <div class="ilap-p-4">
+            @foreach($enrollmentSummary ?? [] as $status => $count)
+            <div class="ilap-flex justify-between ilap-mb-1">
+                <span class="ilap-text-sm">{{ ucfirst(str_replace('_',' ',$status)) }}</span>
+                <span class="ilap-badge ilap-badge--blue">{{ $count }}</span>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="ilap-card">
+        <div class="ilap-card-header">
+            <h3 class="ilap-font-bold text-slate-800 ilap-m-0">Actions</h3>
+        </div>
+        <div class="ilap-p-4 ilap-flex ilap-flex-col ilap-gap-2">
+            <a href="{{ route('students.create') }}?campus_id={{ $campus->id }}" class="ilap-btn ilap-btn-secondary ilap-btn-sm">Add Student</a>
+            <a href="{{ route('leads.create') }}?campus_id={{ $campus->id }}" class="ilap-btn ilap-btn-secondary ilap-btn-sm">Add Lead</a>
+        </div>
     </div>
 </div>
 @endsection

@@ -1,71 +1,61 @@
-{{ FILENAME: resources/views/documents/index.blade.php }}
+{{-- resources/views/documents/index.blade.php --}}
 @extends('layouts.app')
-@section('content')
 
-<div class="ilap-page-header ilap-flex items-center justify-between ilap-flex-wrap gap-3">
+@section('title','Documents')
+@section('page-title','Documents')
+
+@section('content')
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <div>
-        <h1 class="ilap-text-2xl ilap-font-extrabold" style="color:var(--ilap-primary-dark)">Documents</h1>
-        <p class="ilap-text-xs text-slate-500">{{ $documents->total() ?? $documents->count() }} documents</p>
+        <h1 class="text-2xl font-extrabold text-slate-900">Documents</h1>
+        <p class="text-xs text-slate-500">{{ $documents->total() ?? $documents->count() }} documents</p>
     </div>
     <a href="{{ route('documents.create') }}"
-       class="ilap-px-5 py-2.5 rounded-xl text-white font-bold text-sm shadow-md"
-       style="background:var(--ilap-primary)">+ Upload Document</a>
+       class="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-blue-800">
+        + Upload Document
+    </a>
 </div>
 
-<div class="ilap-card" style="--ilap-primary: #64748b">
-    <div class="ilap-table__wrap">
-        <table class="ilap-table">
-            <thead>
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-100">
+            <thead class="bg-slate-50">
                 <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Size</th>
-                    <th>Uploaded</th>
-                    <th>Actions</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">#</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Title</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Type</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Category</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Size</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Uploaded</th>
+                    <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-slate-100 bg-white">
             @forelse($documents as $i => $doc)
-            <tr style="--ilap-primary:var(--ilap-metric-color,#3b82f6)">
-                <td class="ilap-text-xs text-slate-400">{{ ++$i }}</td>
-                <td>
-                    <div class="ilap-flex items-center gap-2">
-                        <span class="ilap-text-xl">{{ $doc->isPdf() ? '📕' : ($doc->isWord() ? '📘' : '📁') }}</span>
-                        <div>
-                            <p class="ilap-text-sm ilap-font-semibold text-slate-800">{{ $doc->title }}</p>
-                            <p class="ilap-text-xs text-slate-400">{{ Str::limit($doc->description ?? '',40) }}</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <span class="ilap-badge ilap-badge--{{ $doc->isPdf() ? 'blue' : ($doc->isWord() ? 'green' : 'gray') }}">
-                        {{ strtoupper($doc->mime ?: '') }}
-                    </span>
-                </td>
-                <td class="ilap-text-sm text-slate-500">{{ ucfirst($doc->type) }}</td>
-                <td class="ilap-text-sm text-slate-500">{{ $doc->size_formatted ?? '—' }}</td>
-                <td class="ilap-text-xs text-slate-400">
-                    {{ $doc->created_at?->diffForHumans() ?? '—' }}
-                </td>
-                <td class="ilap-flex gap-1">
+            <tr>
+                <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $i + 1 }}</td>
+                <td class="whitespace-nowrap px-5 py-3 text-sm font-semibold text-slate-800">{{ $doc->title }}</td>
+                <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $doc->type }}</td>
+                <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $doc->category ?? '—' }}</td>
+                <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $doc->size_formatted ?? '—' }}</td>
+                <td class="whitespace-nowrap px-5 py-3 text-xs text-slate-400">{{ $doc->created_at?->diffForHumans() ?? '—' }}</td>
+                <td class="flex gap-1 whitespace-nowrap px-5 py-3 text-sm">
                     <a href="{{ route('documents.download',$doc) }}"
-                       class="ilap-btn ilap-btn-secondary ilap-btn-sm">⬇</a>
+                       class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">⬇</a>
                     <button onclick="deleteDoc('{{ $doc->id }}')"
-                            class="ilap-btn ilap-btn-sm ilap-btn-danger">🗑</button>
+                            class="inline-flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100">🗑</button>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="7" class="ilap-text-center ilap-py-12 text-slate-400">
-                    <p>No documents yet. Click the button above to upload one.</p>
-                </td>
+                <td colspan="7" class="px-5 py-12 text-center text-sm text-slate-400">No documents uploaded yet.</td>
             </tr>
             @endforelse
             </tbody>
         </table>
     </div>
-    {{ $documents->links() }}
+    <div class="border-t border-slate-100 px-5 py-3">
+        {{ $documents->links() }}
+    </div>
 </div>
 @endsection

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controller as BaseController;
+use App\Models\User;
 
 class AuthController extends Controller
 {

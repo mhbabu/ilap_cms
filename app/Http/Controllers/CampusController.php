@@ -121,4 +121,21 @@ class CampusController extends Controller
         $request->file('file')->store('demographics/'.auth()->user()->campus_id, 'public');
         return back()->with('success','Demographic data uploaded. Processing may take a few minutes.');
     }
+
+    public function stats(Campus $campus)
+    {
+        return response()->json([
+            'id' => $campus->id,
+            'name' => $campus->name,
+            'students' => $campus->students()->count(),
+            'enrollments' => $campus->enrollments()->count(),
+            'payments' => $campus->payments()->sum('amount'),
+            'tickets' => $campus->tickets()->whereIn('status', ['open', 'in_progress'])->count(),
+        ]);
+    }
+
+    public function apiStats(Campus $campus)
+    {
+        return $this->stats($campus);
+    }
 }

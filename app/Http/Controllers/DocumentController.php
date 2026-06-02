@@ -98,6 +98,31 @@ class DocumentController extends Controller
         return back()->with('success','Document deleted.');
     }
 
+    public function download(Document $document)
+    {
+        $path = storage_path('app/public/' . $document->path);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->download($path, $document->original_name);
+    }
+
+    public function edit(Document $document): View
+    {
+        return $this->withOrg('documents.edit', compact('document'));
+    }
+
+    public function update(Request $request, Document $document): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $document->update($validated);
+        return back()->with('success','Document updated.');
+    }
+
     public function sendBroadcast(Request $request): RedirectResponse
     {
         $docId = $request->validate(['doc_id'=>'required|exists:documents,id'])['doc_id'];

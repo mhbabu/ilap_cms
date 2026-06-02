@@ -1,246 +1,198 @@
 {{-- resources/views/dashboard/overview.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title','Dashboard')
+@section('page-title', ucfirst($role ?? 'Dashboard'))
 
 @section('content')
 
-{{-- Role card + inline org color scheme --}}
-<div class="ilap-metrics ilap-mb-6">
-    <div class="ilap-metric">
-        <div class="ilap-flex items-center justify-between">
-            <p class="ilap-metric__label">Students</p>
-            <span class="ilap-text-2xl ilap-font-extrabold" style="color:var(--ilap-primary)">🎓</span>
-        </div>
-        <p class="ilap-metric__value">{{ number_format($activeStudents ?? 0) }}</p>
-        <p class="ilap-text-xs text-slate-500">Enrolled this term</p>
-    </div>
-
-    <div class="ilap-metric">
-        <div class="ilap-flex items-center justify-between">
-            <p class="ilap-metric__label">Pending Payments</p>
-            <span class="ilap-text-2xl ilap-font-extrabold" style="color:#ef4444">💰</span>
-        </div>
-        <p class="ilap-metric__value">{{ number_format($paymentPending ?? 0) }}</p>
-        <p class="ilap-text-xs text-slate-500">Awaiting approval</p>
-    </div>
-
-    <div class="ilap-metric">
-        <div class="ilap-flex items-center justify-between">
-            <p class="ilap-metric__label">Open Tickets</p>
-            <span class="ilap-text-2xl ilap-font-extrabold" style="color:#f59e0b">🎫</span>
-        </div>
-        <p class="ilap-metric__value">{{ number_format($openTickets ?? 0) }}</p>
-        <p class="ilap-text-xs text-slate-500">Requires action</p>
-    </div>
-
-    <div class="ilap-metric">
-        <div class="ilap-flex items-center justify-between">
-            <p class="ilap-metric__label">Leads</p>
-            <span class="ilap-text-2xl ilap-font-extrabold" style="color:#8b5cf6">📋</span>
-        </div>
-        <p class="ilap-metric__value">{{ number_format($totalLeads ?? 0) }}</p>
-        <p class="ilap-text-sm text-blue-600 font-semibold">{{ round($totalLeads ?? 0 / 70 * 100) }}% discount applied</p>
-    </div>
+<div class="mb-6 rounded-2xl bg-gradient-to-br from-blue-800 to-blue-500 px-6 py-5 text-white shadow-sm">
+  <p class="text-xs font-semibold uppercase tracking-wider text-white/70">{{ ucfirst($role ?? 'User') }} Dashboard</p>
+  <h1 class="mt-1 text-xl font-bold text-white">Welcome back</h1>
+  <p class="mt-1 text-sm text-white/85">
+    @if(!empty($campus))
+      Managing {{ $campus->name ?? $campus['name'] ?? 'campus' }}
+    @else
+      System overview for all campuses.
+    @endif
+  </p>
 </div>
 
-{{-- Welcome Banner --}}
-<div class="ilap-card mb-6 relative overflow-hidden"
-     style="background:linear-gradient(135deg,var(--ilap-primary),var(--ilap-primary-dark))">
-    <div class="p-6 ilap-flex items-center justify-between">
-        <div>
-            <p class="ilap-text-xs text-white/60 uppercase tracking-wider ilap-mb-1">
-                {{ ucfirst($role) }} Dashboard
-            </p>
-            <p class="ilap-text-2xl ilap-font-bold text-white" id="ilap-welcome-title">
-                {{ ucfirst($role) }} - Dashboard
-            </p>
-            <p class="ilap-text-sm text-white/80 ilap-mt-2">
-                @if(!empty($campus))
-                    Managing {{ $campus->name ?? $campus['name'] }} campus
-                @else
-                  iLAP Global Overview — All 5 branches.
-                @endif
-            </p>
-        </div>
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+        <i class="fa-solid fa-user-graduate text-sm"></i>
+      </div>
+      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">This term</span>
     </div>
+    <p class="mt-3 text-2xl font-bold text-slate-900">{{ number_format($activeStudents ?? 0) }}</p>
+    <p class="text-xs font-medium text-slate-500">Active Students</p>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+        <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+      </div>
+      <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">Pending</span>
+    </div>
+    <p class="mt-3 text-2xl font-bold text-slate-900">{{ number_format($paymentPending ?? 0) }}</p>
+    <p class="text-xs font-medium text-slate-500">Pending Payments</p>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 text-red-700">
+        <i class="fa-solid fa-circle-exclamation text-sm"></i>
+      </div>
+      <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">Open</span>
+    </div>
+    <p class="mt-3 text-2xl font-bold text-slate-900">{{ number_format($openTickets ?? 0) }}</p>
+    <p class="text-xs font-medium text-slate-500">Open Tickets</p>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-100 text-violet-700">
+        <i class="fa-solid fa-user-plus text-sm"></i>
+      </div>
+      <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">New</span>
+    </div>
+    <p class="mt-3 text-2xl font-bold text-slate-900">{{ number_format($totalLeads ?? 0) }}</p>
+    <p class="text-xs font-medium text-slate-500">New Leads</p>
+  </div>
 </div>
 
-@if(!empty($myHandledStudents) && $myHandledStudents->count() > 0)
-{{-- Students table --}}
-<div class="ilap-card ilap-mb-6">
-    <div class="ilap-card-header ilap-flex items-center justify-between">
-        <h3 class="ilap-font-black text-slate-800" style="margin:0">My Students</h3>
-        <a href="{{ route('students.index') }}" class="ilap-text-sm font-bold hover:underline"
-           style="color:var(--ilap-primary)">View All →</a>
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+      <h2 class="text-sm font-bold text-slate-900">Recent Activity</h2>
+      <span class="text-xs text-slate-500">Latest updates</span>
     </div>
-    <div class="ilap-table__wrap">
-        <table class="ilap-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Progress</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($myHandledStudents as $i => $student)
-                <tr>
-                    <td>{{ ++$i }}</td>
-                    <td class="ilap-font-semibold text-slate-700">{{ $student->name }}</td>
-                    <td>{{ $student->email ?? '—' }}</td>
-                    <td>{{ $student->phone ?? '—' }}</td>
-                    <td>
-                        <div class="ilap-flex items-center gap-3">
-                            <div class="ilap-flex-1 bg-slate-100 rounded-full h-2">
-                                <div class="h-2 rounded-full transition-all"
-                                     style="width:80%;background:var(--ilap-primary)"></div>
-                            </div>
-                            <span class="ilap-text-xs font-bold" style="color:var(--ilap-primary)">80%</span>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="{{ route('students.show', $student) }}" class="ilap-btn ilap-btn-sm ilap-btn-secondary">
-                            Edit
-                        </a>
-                        <a href="{{ route('students.show', $student) }}" class="ilap-btn ilap-btn-sm ilap-btn-secondary"
-                           style="background:var(--ilap-primary-light);color:var(--ilap-primary)">View</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6" class="ilap-text-center ilap-py-4 text-slate-400">
-                        No students assigned yet.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="p-4 space-y-3">
+      @foreach(($recentActivities ?? []) as $activity)
+        <div class="flex items-start gap-3">
+          <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm">{{ $activity['icon'] ?? '📌' }}</div>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold text-slate-700">{{ $activity['text'] }}</p>
+            <p class="text-xs text-slate-500">{{ $activity['time'] ?? 'recently' }}</p>
+          </div>
+        </div>
+      @endforeach
     </div>
-</div>
-@endif
+  </div>
 
-{{-- Recent Activity + Stats ---}}
-<div class="ilap-grid-3 ilap-mb-6">
-    <div class="ilap-card">
-        <div class="ilap-card-header">
-            <h3 class="ilap-font-bold text-slate-800 ilap-m-0" style="background:var(--ilap-primary);color:white;padding:.5rem .75rem;border-radius:.375rem .375rem 0 0">Recent Activity</h3>
-        </div>
-        <ul class="p-4 space-y-3">
-            @foreach(($recentActivities ?? []) as $activity)
-            <li class="ilap-flex items-center gap-3">
-                <span class="text-xl">{{ $activity['icon'] ?? '📌' }}</span>
-                <div class="ilap-flex-1">
-                    <p class="ilap-text-sm ilap-font-semibold text-slate-700">{{ $activity['text'] }}</p>
-                    <p class="ilap-text-xs text-slate-400">{{ $activity['time'] ?? 'recently' }}</p>
-                </div>
-            </li>
-            @endforeach
-        </ul>
+  <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-100 px-5 py-3">
+      <h2 class="text-sm font-bold text-slate-900">Quick Actions</h2>
     </div>
-
-    <div class="ilap-card">
-        <div class="ilap-card-header">
-            <h3 class="ilap-font-bold text-slate-800 ilap-m-0">Performance Overview</h3>
-        </div>
-        <div class="p-4 space-y-4">
-            @foreach([
-                ['label'=>'Students', 'value'=>$activeStudents ?? 0, 'total'=>$totalStudents ?? $activeStudents ?? 0, 'color'=>'#3b82f6'],
-                ['label'=>'Leads Converted', 'value'=>round(($totalLeads ?? 0) / 2), 'total'=>($totalLeads ?? 0), 'color'=>'#8b5cf6'],
-                ['label'=>'Payments', 'value'=>$totalStudents ?? 0, 'total'=>$totalStudents ?? 100, 'color'=>'#10b981'],
-            ] as $stat)
-            <div>
-                <div class="ilap-flex items-center justify-between ilap-mb-1">
-                    <span class="ilap-text-xs font-semibold text-slate-600">{{ $stat['label'] }}</span>
-                    <span class="ilap-text-xs font-bold" style="color:{{ $stat['color'] }}">
-                        {{ $stat['value'] }} / {{ $stat['total'] }}
-                    </span>
-                </div>
-                <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
-                    <div class="h-full rounded-full transition-all"
-                         style="width:{{ round($stat['value']/$stat['total']*100) }}%;background:{{ $stat['color'] }}">
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
+    <div class="flex flex-wrap gap-2 p-4">
+      <a href="{{ route('students.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white hover:bg-blue-800">
+        <i class="fa-solid fa-user-plus"></i> New Student
+      </a>
+      <a href="{{ route('finance.payments.create') ?? route('finance.index') }}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+        <i class="fa-solid fa-dollar-sign"></i> Record Payment
+      </a>
+      <a href="{{ route('tickets.create') }}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+        <i class="fa-solid fa-ticket"></i> Open Ticket
+      </a>
+      <a href="{{ route('leads.create') }}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+        <i class="fa-solid fa-user-plus"></i> New Lead
+      </a>
+      <a href="{{ route('documents.create') }}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+        <i class="fa-solid fa-upload"></i> Upload Document
+      </a>
+      <a href="{{ route('messages.compose') }}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+        <i class="fa-solid fa-paper-plane"></i> Send Message
+      </a>
     </div>
-
-    <div class="ilap-card">
-        <div class="ilap-card-header"><h3 class="ilap-font-bold text-slate-800 ilap-m-0">Quick Actions</h3></div>
-        <div class="ilap-flex ilap-flex-wrap gap-2 p-4">
-            <a href="{{ route('students.create') }}"
-               class="ilap-btn ilap-btn-primary ilap-btn-sm" style="background:var(--ilap-primary)">
-                + New Student
-            </a>
-            <a href="{{ route('payments.index') }}"
-               class="ilap-btn ilap-btn-secondary ilap-btn-sm" style="background:var(--ilap-secondary);color:white;border:none">
-                Record Payment
-            </a>
-            <a href="{{ route('tickets.create') }}"
-               class="ilap-btn ilap-btn-secondary ilap-btn-sm">
-                Open Ticket
-            </a>
-            <a href="{{ route('leads.index') }}"
-               class="ilap-btn ilap-btn-secondary ilap-btn-sm">
-                Manage Leads
-            </a>
-            <a href="{{ route('documents.create') }}"
-               class="ilap-btn ilap-btn-secondary ilap-btn-sm">
-                + Upload Document
-            </a>
-        </div>
-    </div>
+  </div>
 </div>
 
-{{-- My Tickets (handler) --}}
 @if(!empty($myTickets) && $myTickets->count() > 0)
-<div class="ilap-card ilap-mb-6">
-    <div class="ilap-card-header ilap-flex items-center justify-between">
-        <h3 class="ilap-font-bold ilap-m-0" style="color:var(--ilap-primary)">
-            @if($role === 'handler') My Pending Tickets @else Recent Tickets @endif
-        </h3>
-        <a href="{{ route('tickets.index') }}" class="ilap-text-xs font-bold uppercase"
-           style="color:var(--ilap-primary)">View All →</a>
-    </div>
-    <div class="ilap-table__wrap">
-        <table class="ilap-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Priority</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach($myTickets as $i => $t)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td class="ilap-font-semibold text-slate-700">{{ $t->title }}</td>
-                <td>
-                    @php $statusColor = ['open'=>'red','in_progress'=>'yellow','resolved'=>'green','closed'=>'blue']; @endphp
-                    <span class="ilap-badge ilap-badge--{{ $statusColor[$t->status] ?? 'gray' }}">
-                        {{ ucfirst(str_replace('_',' ',$t->status)) }}
-                    </span>
-                </td>
-                <td>
-                    @php $pColor=['critical'=>'red','high'=>'orange','medium'=>'yellow','low'=>'green']; @endphp
-                    <span class="ilap-badge ilap-badge--{{ $pColor[$t->priority] ?? 'gray' }}">
-                        {{ ucfirst($t->priority) }}
-                    </span>
-                </td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+<div class="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm">
+  <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+    <h2 class="text-sm font-bold text-slate-900">Recent Tickets</h2>
+    <a href="{{ route('tickets.index') }}" class="text-xs font-semibold text-primary hover:underline">View All <i class="fa-solid fa-arrow-right fa-xs ml-1"></i></a>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-100">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">#</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Title</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Status</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Priority</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 bg-white">
+        @foreach($myTickets as $i => $t)
+          <tr>
+            <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $i + 1 }}</td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm font-semibold text-slate-800">{{ $t->title }}</td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm">
+              @php $s = ['open'=>'red','in_progress'=>'yellow','resolved'=>'green','closed'=>'blue','pending'=>'gray']; @endphp
+              <span class="rounded-full bg-{{ $s[$t->status] ?? 'gray' }}-100 px-2 py-0.5 text-[11px] font-semibold text-{{ $s[$t->status] ?? 'gray' }}-700">{{ ucfirst(str_replace('_',' ', $t->status)) }}</span>
+            </td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm">
+              @php $p = ['critical'=>'red','high'=>'orange','medium'=>'yellow','low'=>'green']; @endphp
+              <span class="rounded-full bg-{{ $p[$t->priority] ?? 'gray' }}-100 px-2 py-0.5 text-[11px] font-semibold text-{{ $p[$t->priority] ?? 'gray' }}-700">{{ ucfirst($t->priority) }}</span>
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+  </div>
 </div>
 @endif
 
-{{-- Footer spacing --}}
-<div class="ilap-py-6"></div>
+@if(!empty($myStudents) && $myStudents->count() > 0)
+<div class="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm">
+  <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+    <h2 class="text-sm font-bold text-slate-900">Recent Students</h2>
+    <a href="{{ route('students.index') }}" class="text-xs font-semibold text-primary hover:underline">View All <i class="fa-solid fa-arrow-right fa-xs ml-1"></i></a>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-100">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">#</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Name</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Email</th>
+          <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Progress</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 bg-white">
+        @foreach($myStudents as $i => $student)
+          <tr>
+            <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $i + 1 }}</td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm font-semibold text-slate-800">{{ $student->name }}</td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm text-slate-600">{{ $student->email ?? '—' }}</td>
+            <td class="whitespace-nowrap px-5 py-3 text-sm">
+              @php
+                $pct = match($student->current_step) {
+                  'documents_verified' => 100,
+                  'completed' => 100,
+                  'enrolled' => 85,
+                  default => 40,
+                };
+              @endphp
+              <div class="flex items-center gap-2">
+                <div class="h-1.5 flex-1 rounded-full bg-slate-100">
+                  <div class="h-1.5 rounded-full bg-primary" style="width: {{ $pct }}%"></div>
+                </div>
+                <span class="text-xs font-semibold text-primary">{{ $pct }}%</span>
+              </div>
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+  </div>
+</div>
+@endif
+
+<div class="mt-8"></div>
 
 @endsection

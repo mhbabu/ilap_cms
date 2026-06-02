@@ -83,7 +83,7 @@ table{border-collapse:collapse;width:100%}
 .ilap-nav-badge{background:var(--ilap-primary);color:#fff;font-size:.6875rem;border-radius:9999px}
 
 /* ── Top Bar ─────────────────────────────────────────────── */
-.ilap-topbar{background:rgba(255,255,255,.8);border-bottom:1px solid #e2e8f0;backdrop-filter:blur(12px)}
+.ilap-topbar{background:#fff;border-bottom:1px solid #e2e8f0}
 .ilap-icon-btn{display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:.625rem;color:#475569;transition:background .15s}
 .ilap-icon-btn:hover{background:#f1f5f9;color:var(--ilap-primary)}
 
@@ -99,7 +99,7 @@ table{border-collapse:collapse;width:100%}
 
 /* ── Cards ──────────────────────────────────────────────── */
 .ilap-card{background:#fff;border-radius:var(--ilap-radius);box-shadow:var(--ilap-shadow);overflow:hidden}
-.ilap-card--flat{box-shadow:none;border:1px solid #e2e8f0}
+.ilap-card:hover{box-shadow:var(--ilap-shadow-md)}
 .ilap-card-header{padding:1.125rem 1.375rem;border-bottom:1px solid #f1f5f9}
 .ilap-card-header h3{font-size:.9375rem;font-weight:700;color:#0f172a}
 
@@ -332,5 +332,128 @@ table{border-collapse:collapse;width:100%}
 
 @media(max-width:768px){
   .ilap-sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);transition:transform .3s;z-index:60}
-  .ilap-sidebar.open{transform:translateX(0)}
+  .ilap-sidebar.ilap-sidebar--closed{transform:translateX(-100%)}
+  .ilap-sidebar:not(.ilap-sidebar--closed){transform:translateX(0)}
+}
+
+/* ── Login Page ───────────────────────────────────────────── */
+.login-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.625rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.login-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+}
+.login-btn-ss {
+  width: 100%;
+  padding: 0.7rem 1.25rem;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.login-btn-ss:hover {
+  background: #e2e8f0;
+}
+.toggle-password {
+  cursor: pointer;
+  color: #94a3b8;
+  border: none;
+  background: transparent;
+  transition: color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.toggle-password:hover {
+  color: #475569;
+}
+.alert-danger-custom {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.875rem;
+}
+.input-group-text {
+  background: transparent;
+  border: 1.5px solid #e2e8f0;
+  border-right: none;
+  border-radius: 0.625rem 0 0 0.625rem;
+  color: #94a3b8;
+  padding: 0.75rem 0.75rem;
+}
+.input-group .form-control {
+  border-left: none;
+  border-radius: 0 0.625rem 0.625rem 0;
+}
+.input-group:focus-within .input-group-text {
+  border-color: #3b82f6;
+}
+.input-group:focus-within .form-control {
+  border-color: #3b82f6;
+  border-left: 1.5px solid #3b82f6;
+}
+.input-group .form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.hover-bg-light:hover {
+  background-color: #f1f5f9 !important;
+}
+.focus-within-border-primary:focus-within {
+  border-color: #3b82f6 !important;
+}
+.vh-100 {
+  min-height: 100vh;
+}
+.flex-grow-1 {
+  flex-grow: 1 !important;
+}
+.flex-column {
+  flex-direction: column !important;
+}
+.border-end {
+  border-right: 1px solid #dee2e6 !important;
+}
+.bg-light {
+  background-color: #f8fafc !important;
+}
+.text-dark {
+  color: #0f172a !important;
+}
+.text-secondary {
+  color: #64748b !important;
+}
+.rounded-circle {
+  border-radius: 50% !important;
+}
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+.translate-middle {
+  transform: translate(-50%, -50%) !important;
+}
+.lh-tight {
+  line-height: 1.25 !important;
 }

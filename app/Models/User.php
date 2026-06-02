@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, HasUuids;
+    use HasFactory, Notifiable, HasRoles;
 
     protected $fillable = [
         'name', 'email', 'password', 'phone', 'role',
@@ -30,8 +30,10 @@ class User extends Authenticatable
         'forced_login'      => 'boolean',
     ];
 
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected function castsToArray(): array
+    {
+        return $this->casts;
+    }
 
     // ── Campus Relationships
     public function campus()      { return $this->belongsTo(Campus::class, 'campus_id'); }
@@ -44,11 +46,4 @@ class User extends Authenticatable
 
     // ── Auth / user identity
     public function studentProfile() { return $this->hasOne(Student::class); }
-
-    protected static function booted(): void
-    {
-        static::created(fn(User $user) => ($user ? $user : null) && $user->update([
-            'unique_id' => 'USR' . strtoupper(substr(uniqid(), -6)),
-        ]));
-    }
 }

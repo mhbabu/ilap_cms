@@ -72,7 +72,7 @@ class SettingsController extends Controller
         $logs = Activity::query()
             ->when($request->filled('causer'), fn($q) => $q->where('causer_id',$request->causer))
             ->latest()
-            ->take(100)->get();
+            ->paginate(25);
         return $this->withOrg('settings.activity_logs', compact('logs'));
     }
 
@@ -86,7 +86,27 @@ class SettingsController extends Controller
             'auto_approve_documents'   => config('ilap.auto_approve_documents', false),
             'mail_layout'              => config('ilap.mail_layout', 'default'),
         ];
-        return $this->withOrg('settings.ilap_config', compact('config'));
+        return $this->withOrg('settings.ilap-config', compact('config'));
+    }
+
+    public function updateColors(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'org_name'       => 'required|string|max:255',
+            'primary_color'  => 'required|string|max:7',
+            'secondary_color'=> 'required|string|max:7',
+        ]);
+
+        $campus = auth()->user()?->campus;
+        if ($campus) {
+            $campus->update([
+                'name'            => $data['org_name'],
+                'color_primary'   => $data['primary_color'],
+                'color_secondary' => $data['secondary_color'],
+            ]);
+        }
+
+        return back()->with('success','Colors and org name updated.');
     }
 
     public function saveIlapConfig(Request $request): RedirectResponse
