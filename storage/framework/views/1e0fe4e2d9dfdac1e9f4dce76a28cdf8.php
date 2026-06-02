@@ -1,7 +1,6 @@
 <?php $__env->startSection('title', 'Audit Logs'); ?>
-<?php $__env->startSection('page-title', 'Audit Logs'); ?>
 
-<?php $__env->startSection('content'); ?>
+<?php $__env->startSection('settings-content'); ?>
 <div class="ilap-page-header">
     <h1 class="ilap-text-2xl ilap-font-extrabold" style="color:var(--ilap-primary-dark)">Audit Logs</h1>
     <p class="ilap-text-sm text-slate-500">System activity log for all admin actions.</p>
@@ -42,4 +41,4 @@
 
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/Projects/l/resources/views/settings/activity_logs.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('settings.settings-layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/Projects/l/resources/views/settings/activity_logs.blade.php ENDPATH**/ ?>

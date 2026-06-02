@@ -37,19 +37,17 @@ class UserSeeder extends Seeder
         foreach ($userTypes as $type) {
             $existing = User::where('email', "$type@test.com")->first();
             if (!$existing) {
-                $user = new User([
+                $user = User::create([
                     'name'      => ucfirst(str_replace('_', ' ', $type)),
                     'email'     => "$type@test.com",
                     'password'  => Hash::make('123456'),
-                    'role'      => $type,
                     'is_active' => true,
                 ]);
-                $user->save();
                 $user->syncRoles([$type]);
             }
         }
 
-        $handlerUser = User::where('role', 'handler')->first();
+        $handlerUser = User::whereHas('roles', fn($q) => $q->where('name', 'handler'))->first();
         if ($handlerUser && !Handler::where('user_id', $handlerUser->id)->exists()) {
             Handler::create([
                 'user_id'   => $handlerUser->id,
@@ -63,15 +61,15 @@ class UserSeeder extends Seeder
         for ($i = 1; $i <= 15; $i++) {
             $existing = User::where('email', "student$i@ilap.com")->first();
             if (!$existing) {
-                User::create([
+                $user = User::create([
                     'name'      => "Demo Student $i",
                     'email'     => "student$i@ilap.com",
                     'password'  => Hash::make('123456'),
-                    'role'      => 'student',
                     'phone'     => $faker->phoneNumber,
                     'is_active' => true,
                     'campus_id' => Campus::inRandomOrder()->first()?->id,
                 ]);
+                $user->syncRoles(['student']);
             }
         }
 
