@@ -22,7 +22,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = auth()->user();
 
-            if (! $user->email_verified_at && ! $user->hasRole('super_admin')) {
+            if (! $user->email_verified_at && ! $user->hasRole('super_admin') && ! $user->hasRole('student')) {
                 auth()->logout();
                 return back()->withErrors(['email' => 'Please verify your email before logging in.']);
             }

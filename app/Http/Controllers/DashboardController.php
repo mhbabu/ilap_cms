@@ -202,12 +202,12 @@ class DashboardController extends Controller
 
     private function studentDash(): View
     {
-        $user        = auth()->user();
-        $student     = Student::where('email', $user->email)->first();
-        $payments    = $student ? $student->payments()->latest(5)->get() : collect();
+        $user = auth()->user();
+        $student = $user->studentProfile;
+        $payments = $student ? $student->payments()->latest(5)->get() : collect();
         $enrollments = $student ? $student->enrollments()->with('classData')->get() : collect();
-        $documents   = $student ? $student->documents : collect();
-        $tickets     = $student ? Ticket::where('student_id', $student->id)->latest()->take(5)->get() : collect();
+        $documents = $student ? $student->documents : collect();
+        $tickets = $student ? Ticket::where('student_id', $student->id)->latest()->take(5)->get() : collect();
 
         return $this->withOrg('dashboard.student', compact(
             'student','payments','enrollments','documents','tickets','user'

@@ -21,7 +21,7 @@ class CourseVideoController extends Controller
     public function index(Request $request, Course $course): View
     {
         $user = Auth::user();
-        $student = $user ? Student::where('email', $user->email)->first() : null;
+        $student = $user->studentProfile;
 
         // Check if student is enrolled in the course
         if (!$student || !$student->courses()->where('courses.id', $course->id)->exists()) {
@@ -77,7 +77,7 @@ class CourseVideoController extends Controller
     public function play(Video $video): View
     {
         $user = Auth::user();
-        $student = $user ? Student::where('email', $user->email)->first() : null;
+        $student = $user->studentProfile;
 
         // Check if student is enrolled in the course of this video
         if (!$student || !$student->courses()->where('courses.id', $video->course_id)->exists()) {

@@ -18,7 +18,7 @@ class CourseController extends Controller
     public function index(Request $request): View
     {
         $user = Auth::user();
-        $student = $user ? Student::where('email', $user->email)->first() : null;
+        $student = $user->studentProfile;
 
         $courses = Course::where('is_active', true)->withCount('videos')->get();
 
@@ -76,13 +76,9 @@ class CourseController extends Controller
     public function enroll(Request $request, Course $course): RedirectResponse
     {
         $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login');
-        }
-
-        $student = Student::where('email', $user->email)->first();
+        $student = $user->studentProfile;
         if (!$student) {
-            return back()->with('error', 'Student record not found.');
+            return redirect()->route('login');
         }
 
         // Check if already enrolled
@@ -120,7 +116,7 @@ class CourseController extends Controller
     public function myCourses(Request $request): View
     {
         $user = Auth::user();
-        $student = $user ? Student::where('email', $user->email)->first() : null;
+        $student = $user->studentProfile;
 
         if (!$student) {
             return redirect()->route('login');
