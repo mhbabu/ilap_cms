@@ -196,4 +196,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/ilap-config',                     [\App\Http\Controllers\SettingsController::class,'saveIlapConfig'])->name('save-ilap-config');
         Route::post('/colors',                         [\App\Http\Controllers\SettingsController::class,'updateColors'])->name('update-colors');
     });
+
+    // ── Courses and Videos ───────────────────────────────────────
+    Route::prefix('courses')->name('courses.')->middleware(['auth'])->group(function () {
+        Route::get('/',                                [\App\Http\Controllers\CourseController::class,'index'])->name('index');
+        Route::get('/my',                              [\App\Http\Controllers\CourseController::class,'myCourses'])->name('my');
+        Route::post('{course}/enroll',                 [\App\Http\Controllers\CourseController::class,'enroll'])->name('enroll');
+        Route::prefix('{course}/videos')->name('videos.')->group(function () {
+            Route::get('/',                            [\App\Http\Controllers\CourseVideoController::class,'index'])->name('index');
+            Route::get('{video}/play',                 [\App\Http\Controllers\CourseVideoController::class,'play'])->name('play');
+        });
+    });
 });

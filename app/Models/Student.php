@@ -29,9 +29,14 @@ class Student extends Model
     public function campus()   { return $this->belongsTo(Campus::class); }
     public function handler()  { return $this->belongsTo(User::class, 'handler_id'); }
     public function enrollments(){ return $this->hasMany(Enrollment::class); }
+    public function courseEnrollments() { return $this->hasMany(CourseEnrollment::class); }
     public function payments()  { return $this->hasMany(Payment::class); }
     public function documents() { return $this->hasMany(Document::class); }
     public function tickets()   { return $this->hasMany(Ticket::class); }
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_enrollments');
+    }
 
     // ── Auto-generate unique_id
     protected static function booted(): void
